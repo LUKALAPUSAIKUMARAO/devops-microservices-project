@@ -1,26 +1,55 @@
-- name: Build and Push Services
-  run: |
-    services=("frontend" "cartservice" "productcatalogservice" "checkoutservice" "paymentservice" "shippingservice" "emailservice" "recommendationservice" "currencyservice")
+name: Build and Push All Services
 
-    for service in "${services[@]}"; do
-      echo "Processing $service"
+on:
+  push:
+    branches:
+      - main
 
-      if [ -f "app/src/$service/Dockerfile" ]; then
-        echo "Dockerfile found for $service"
+env:
+  AWS_REGION: ap-south-1
+  ECR_REGISTRY: 654654229415.dkr.ecr.ap-south-1.amazonaws.com
 
-        aws ecr describe-repositories --repository-names $service || \
-        aws ecr create-repository --repository-name $service
+jobs:
+  build:
+    runs-on: ubuntu-latest
 
-        cd app/src/$service
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
 
-        docker build -t $service .
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-south-1
 
-        docker tag $service:latest $ECR_REGISTRY/$service:latest
+      - name: Login to ECR
+        uses: aws-actions/amazon-ecr-login@v1
 
-        docker push $ECR_REGISTRY/$service:latest
+      - name: Build and Push Services
+        run: |
+          services=("frontend" "cartservice" "productcatalogservice" "checkoutservice" "paymentservice" "shippingservice" "emailservice" "recommendationservice" "currencyservice")
 
-        cd -
-      else
-        echo "Skipping $service (no Dockerfile found)"
-      fi
-    done
+          for service in "${services[@]}"; do
+            echo "Processing $service"
+
+            if [ -f "app/src/$service/Dockerfile" ]; then
+              echo "Dockerfile found for $service"
+
+              aws ecr describe-repositories --repository-names $service || \
+              aws ecr create-repository --repository-name $service
+
+              cd app/src/$service
+
+              docker build -t $service .
+
+              docker tag $service:latest $ECR_REGISTRY/$service:latest
+
+              docker push $ECR_REGISTRY/$service:latest
+
+              cd -
+            else
+              echo "Skipping $service (no Dockerfile found)"
+            fi
+          done
