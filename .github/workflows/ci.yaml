@@ -1,48 +1,26 @@
-name: Build and Push All Services
+- name: Build and Push Services
+  run: |
+    services=("frontend" "cartservice" "productcatalogservice" "checkoutservice" "paymentservice" "shippingservice" "emailservice" "recommendationservice" "currencyservice")
 
-on:
-  push:
-    branches: [ main ]
+    for service in "${services[@]}"; do
+      echo "Processing $service"
 
-env:
-  AWS_REGION: ap-south-1
-  ECR_REGISTRY: 654654229415.dkr.ecr.ap-south-1.amazonaws.com
+      if [ -f "app/src/$service/Dockerfile" ]; then
+        echo "Dockerfile found for $service"
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+        aws ecr describe-repositories --repository-names $service || \
+        aws ecr create-repository --repository-name $service
 
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+        cd app/src/$service
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v2
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-south-1
+        docker build -t $service .
 
-      - name: Login to ECR
-        uses: aws-actions/amazon-ecr-login@v1
+        docker tag $service:latest $ECR_REGISTRY/$service:latest
 
-      - name: Build and Push Services
-        run: |
-          services=("frontend" "cartservice" "productcatalogservice" "checkoutservice" "paymentservice" "shippingservice" "emailservice" "recommendationservice" "currencyservice")
+        docker push $ECR_REGISTRY/$service:latest
 
-          for service in "${services[@]}"; do
-            echo "Processing $service"
-
-            aws ecr describe-repositories --repository-names $service || \
-            aws ecr create-repository --repository-name $service
-
-            cd app/src/$service
-
-            docker build -t $service .
-
-            docker tag $service:latest $ECR_REGISTRY/$service:latest
-
-            docker push $ECR_REGISTRY/$service:latest
-
-            cd -
-          done
+        cd -
+      else
+        echo "Skipping $service (no Dockerfile found)"
+      fi
+    done
