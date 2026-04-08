@@ -1,4 +1,4 @@
-name: Build and Push to ECR
+name: Build and Push All Services
 
 on:
   push:
@@ -26,9 +26,23 @@ jobs:
       - name: Login to ECR
         uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and Push Frontend
+      - name: Build and Push Services
         run: |
-          cd app/src/frontend
-          docker build -t frontend .
-          docker tag frontend:latest $ECR_REGISTRY/frontend:latest
-          docker push $ECR_REGISTRY/frontend:latest
+          services=("frontend" "cartservice" "productcatalogservice" "checkoutservice" "paymentservice" "shippingservice" "emailservice" "recommendationservice" "currencyservice")
+
+          for service in "${services[@]}"; do
+            echo "Processing $service"
+
+            aws ecr describe-repositories --repository-names $service || \
+            aws ecr create-repository --repository-name $service
+
+            cd app/src/$service
+
+            docker build -t $service .
+
+            docker tag $service:latest $ECR_REGISTRY/$service:latest
+
+            docker push $ECR_REGISTRY/$service:latest
+
+            cd -
+          done
