@@ -1,27 +1,34 @@
-# Contribution guidelines
+# How to Contribute
 
-We'd love to accept your contributions; large or small. Simply submit an issue or pull request via Github and involve one of the active members. Simple! But please read the rest of this document to ensure we're all on the same page.
+Thank you so much for your interest in contributing to Online Boutique.
+Before contributing, you must:
+* Sign the [Contributor License Agreement (CLA)](#contributor-license-agreement).
+* Follow the [Google Open Source Community Guidelines](https://opensource.google.com/conduct/).
+* Follow the [Contribution Process](#contribution-process).
 
-##  General Rules
+## Contributor License Agreement
 
-- Be kind and polite. Written language often does not convey the sentiment, so make sure you use lots of jokes and emoticons to get the sentiment across.
-- Prefer best practice. Everyone has their preferred style, but try to conform to current best practices. We don't enforce any strict rules.
-- Test your code to the best of your abilities. See the testing documentation for the correct scope of your test.
+Contributions to Online Boutique must be accompanied by a Contributor License
+Agreement (CLA). You (or your employer) retain the copyright to your contribution.
+The CLA gives us permission to use and redistribute your contributions as
+part of the project. Head over to <https://cla.developers.google.com/> to see
+your current agreements on file or to sign a new one.
 
-## Bug reports or feature requests
+You generally only need to submit a CLA once, so if you've already submitted one
+(even if it was for a different project), you probably don't need to do it
+again.
 
-Please open an issue if you have found an issue or have an idea for a new feature. Please follow the bug reporting guidelines if you submit an issue.
+## Contribution Process
 
-## New Contributors
+Here's the process for making a change to this repository:
 
-We have a list of issues on Github with "HelpWanted" labels attributed to them. These represent tasks that we don't have time to do, are self-contained and relatively easy to implement. If you'd like to contribute, but don't know where to start, [look here](https://github.com/microservices-demo/microservices-demo/issues?utf8=%E2%9C%93&q=is%3Aissue%20is%3Aopen%20label%3AHelpWanted).
+1. Review Online Boutique's [purpose](/docs/purpose.md) and [product requirements](/docs/product-requirements.md).
+1. If your proposed changes **do not align** with the purpose and product requirements of Online Boutique, you may be asked to instead maintain your own fork of this repository.
+1. For **small changes** (such as a bug fixes or spelling corrections):
+    1. Fork this repository and submit a [pull request](https://help.github.com/articles/about-pull-requests/).
+    1. Wait for a maintainer of this repository to review your change.
+1. For **bigger changes**:
+    1. Create a [GitHub issue](https://github.com/GoogleCloudPlatform/microservices-demo/issues/new/choose) describing the change **before** working on the implementation. This is important to avoid potentially having to discard your development efforts.
+    1. Wait for a maintainer of this repository to review your GitHub issue. For significantly complex proposals, you may be asked to start a Google Doc to discuss design decisions.
 
-## Direction
-
-This project does have a general direction, but we're happy to consider deviating or pivoting from the direction we're currently heading. See the introductory material for details regarding direction.
-
-With that said, there is absolutely nothing stopping you from submitting a PR. If you've taken the effort to contribute, someone will make the effort to review.
-
-## License
-
-This project is Apache v2.0 licenced. Submitting and merging a PR implies you accept these terms.
+If you have any questions, please [create a GitHub issue](https://github.com/GoogleCloudPlatform/microservices-demo/issues/new/choose).
